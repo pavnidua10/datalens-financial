@@ -7,7 +7,13 @@ import FormData from "form-data";
 const app = express();
 const upload = multer({ storage: multer.memoryStorage() });
 
-app.use(cors());
+app.use(cors({
+  origin: [
+    "http://localhost:5173",
+    "https://datalens-frontend.onrender.com",  // replace with your actual frontend URL
+    /\.onrender\.com$/  // allows all onrender subdomains
+  ]
+}));
 app.use(express.json());
 
 const ML_SERVICE_URL = process.env.ML_SERVICE_URL || "http://localhost:8000";
