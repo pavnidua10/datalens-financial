@@ -1,0 +1,44 @@
+services:
+  # ── Python ML Service ──────────────────────────────────────────
+  - type: web
+    name: datalens-ml
+    runtime: python
+    rootDir: ml-service
+    buildCommand: pip install fastapi uvicorn pandas numpy scikit-learn statsmodels python-multipart
+    startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: PORT
+        value: 8000
+    plan: free
+
+  # ── Node Backend ───────────────────────────────────────────────
+  - type: web
+    name: datalens-backend
+    runtime: node
+    rootDir: backend
+    buildCommand: npm install
+    startCommand: node index.js
+    envVars:
+      - key: PORT
+        value: 3001
+      - key: ML_SERVICE_URL
+        fromService:
+          name: datalens-ml
+          type: web
+          property: host
+    plan: free
+
+  # ── React Frontend ─────────────────────────────────────────────
+  - type: web
+    name: datalens-frontend
+    runtime: static
+    rootDir: frontend
+    buildCommand: npm install && npm run build
+    staticPublishPath: ./dist
+    envVars:
+      - key: VITE_API_URL
+        fromService:
+          name: datalens-backend
+          type: web
+          property: host
+    plan: free

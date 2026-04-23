@@ -1,0 +1,23 @@
+# Run this from datalens-financial/
+cat > .gitignore << 'EOF'
+# Python
+ml-service/venv/
+ml-service/__pycache__/
+ml-service/*.pyc
+ml-service/.env
+
+# Node
+backend/node_modules/
+frontend/node_modules/
+
+# Build
+frontend/dist/
+
+# Env files
+.env
+*.env
+
+# OS
+.DS_Store
+Thumbs.db
+EOF
