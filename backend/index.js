@@ -10,8 +10,8 @@ const upload = multer({ storage: multer.memoryStorage() });
 app.use(cors({
   origin: [
     "http://localhost:5173",
-    "https://datalens-frontend.onrender.com",  // replace with your actual frontend URL
-    /\.onrender\.com$/  // allows all onrender subdomains
+    "https://datalens-frontend.onrender.com",  
+    /\.onrender\.com$/ 
   ]
 }));
 app.use(express.json());
@@ -33,7 +33,7 @@ app.post("/api/analyze", upload.single("file"), async (req, res) => {
 
     const response = await axios.post(`${ML_SERVICE_URL}/analyze`, formData, {
       headers: formData.getHeaders(),
-      timeout: 60000, // 60s — AI call can be slow
+      timeout: 60000, 
     });
 
     res.json(response.data);
@@ -42,5 +42,7 @@ app.post("/api/analyze", upload.single("file"), async (req, res) => {
     res.status(500).json({ error: "Analysis failed", detail: err.message });
   }
 });
+
+app.get("/health", (req, res) => res.json({ status: "ok" }));
 
 app.listen(PORT, () => console.log(`Backend running on port ${PORT}`));
