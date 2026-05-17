@@ -9,7 +9,7 @@ import RollingStatsChart from "../components/RollingStatsChart";
 import SplitValidatorPanel from "../components/SplitValidatorPanel";
 import DataSufficiencyPanel from "../components/DataSufficiencyPanel";
 
-export default function Dashboard({ result, loading, error, fileName, onBack, onAnalyze }) {
+export default function Dashboard({ result, loading, wakingUp, error, fileName, onBack, onAnalyze }) {
   const fileRef = useRef();
 
   const handleFile = (e) => {
@@ -33,7 +33,7 @@ export default function Dashboard({ result, loading, error, fileName, onBack, on
         </div>
         <div className="status-live" style={{ color: error ? "var(--danger)" : loading ? "var(--warn)" : "var(--good)" }}>
           <span className={`status-dot ${loading ? "dot-loading" : error ? "dot-error" : "dot-done"}`} />
-          {loading ? "Analyzing..." : error ? "Error" : "Analysis Complete"}
+          {loading ? (wakingUp ? "Waking up..." : "Analyzing...") : error ? "Error" : "Analysis Complete"}
         </div>
       </div>
 
@@ -70,9 +70,9 @@ export default function Dashboard({ result, loading, error, fileName, onBack, on
               <div className="sidebar-section">
                 <div className="sidebar-heading">Dataset Info</div>
                 {[
-                  ["Rows",     safeResult?.basic_info?.rows ?? 0],
-                  ["Columns",  safeResult?.basic_info?.columns?.length ?? 0],
-                  ["Missing",  Object.values(safeResult?.basic_info?.missing_pct || {}).some(v => v > 0) ? "Yes" : "None"],
+                  ["Rows",      safeResult?.basic_info?.rows ?? 0],
+                  ["Columns",   safeResult?.basic_info?.columns?.length ?? 0],
+                  ["Missing",   Object.values(safeResult?.basic_info?.missing_pct || {}).some(v => v > 0) ? "Yes" : "None"],
                   ["Anomalies", `${safeResult?.anomalies?.anomaly_pct ?? 0}%`],
                 ].map(([k, v]) => (
                   <div className="info-row" key={k}>
@@ -86,7 +86,9 @@ export default function Dashboard({ result, loading, error, fileName, onBack, on
 
           {loading && (
             <div className="sidebar-section">
-              <div className="loading-pulse">Analyzing dataset...</div>
+              <div className="loading-pulse">
+                {wakingUp ? "Waking up server..." : "Analyzing dataset..."}
+              </div>
             </div>
           )}
         </aside>
@@ -96,14 +98,38 @@ export default function Dashboard({ result, loading, error, fileName, onBack, on
           {loading && (
             <div className="loading-screen">
               <div className="loading-spinner" />
-              <div className="loading-text">Running analysis engine...</div>
-              <div className="loading-steps">
-                {["Parsing CSV", "ADF stationarity tests", "Isolation Forest", "Regime detection", "Building report"].map((s, i) => (
-                  <div className="loading-step" key={i} style={{ animationDelay: `${i * 0.4}s` }}>
-                    <span className="step-dot" />{s}
+
+              {wakingUp ? (
+                <>
+                  <div className="loading-text">Waking up server...</div>
+                  <div style={{
+                    fontFamily: "'DM Mono', monospace",
+                    fontSize: "0.72rem",
+                    color: "var(--muted)",
+                    background: "var(--surface2)",
+                    border: "1px solid var(--border)",
+                    borderRadius: "var(--radius)",
+                    padding: "0.75rem 1.25rem",
+                    maxWidth: "340px",
+                    textAlign: "center",
+                    lineHeight: "1.7",
+                  }}>
+                    Free hosting spins down after inactivity.<br />
+                    This usually takes <strong>20–40 seconds</strong> — hang tight.
                   </div>
-                ))}
-              </div>
+                </>
+              ) : (
+                <>
+                  <div className="loading-text">Running analysis engine...</div>
+                  <div className="loading-steps">
+                    {["Parsing CSV", "ADF stationarity tests", "Isolation Forest", "Regime detection", "Building report"].map((s, i) => (
+                      <div className="loading-step" key={i} style={{ animationDelay: `${i * 0.4}s` }}>
+                        <span className="step-dot" />{s}
+                      </div>
+                    ))}
+                  </div>
+                </>
+              )}
             </div>
           )}
 
