@@ -1,25 +1,25 @@
-export default function RegimeCard({ data }) {
+export default function RegimePanel({ data }) {
+  if (!data?.detected) {
+    return <div className="regime-clean">✓ No regime shifts detected</div>;
+  }
+
   return (
-    <div className="bg-gray-900 border border-gray-800 rounded-2xl p-6">
-      <h2 className="text-lg font-semibold mb-3">🔄 Regime Change Detection</h2>
-      {data.detected ? (
-        <>
-          <p className="text-yellow-400 text-sm mb-3">⚠ {data.regime_shifts.length} regime shift(s) detected in <span className="font-mono">{data.column_analyzed}</span></p>
-          <div className="space-y-2">
-            {data.regime_shifts.map((shift, i) => (
-              <div key={i} className="bg-yellow-950 border border-yellow-800 rounded-lg p-3 text-xs text-yellow-200 grid grid-cols-2 gap-2">
-                <span>At index: {shift.at_index}</span>
-                <span>Mean shift: {shift.mean_before} → {shift.mean_after}</span>
-                <span>Volatility before: {shift.volatility_before}</span>
-                <span>Volatility after: {shift.volatility_after}</span>
-              </div>
-            ))}
+    <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
+      <p className="regime-intro">
+        {data.regime_shifts?.length} shift(s) detected in <code>{data.column_analyzed}</code>
+      </p>
+      {data.regime_shifts?.map((s, i) => (
+        <div className="regime-card" key={i}>
+          <div className="regime-grid">
+            <div><span className="regime-key">At Index</span><span className="regime-val">{s.at_index}</span></div>
+            <div><span className="regime-key">Mean Before</span><span className="regime-val">{s.mean_before}</span></div>
+            <div><span className="regime-key">Mean After</span><span className="regime-val">{s.mean_after}</span></div>
+            <div><span className="regime-key">Vol Before</span><span className="regime-val">{s.volatility_before}</span></div>
+            <div><span className="regime-key">Vol After</span><span className="regime-val">{s.volatility_after}</span></div>
           </div>
-          <p className="mt-3 text-sm text-gray-400">{data.recommendation}</p>
-        </>
-      ) : (
-        <p className="text-green-400 text-sm">✓ No regime shifts detected</p>
-      )}
+        </div>
+      ))}
+      <p className="regime-rec">{data.recommendation}</p>
     </div>
   );
 }

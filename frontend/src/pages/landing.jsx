@@ -10,46 +10,46 @@ export default function Landing({ onLaunch, onAnalyze }) {
 
   const features = [
     {
-      tag: "LOOK-AHEAD BIAS",
+      tag: "Look-ahead bias",
       title: "Future Leak Detection",
       desc: "Detects future-named columns, unsorted timestamps, and suspicious correlation patterns that signal data leakage.",
-      badge: "CRITICAL CHECK",
+      badge: "Critical Check",
       badgeClass: "badge-critical",
     },
     {
-      tag: "ADF TEST",
+      tag: "ADF Test",
       title: "Stationarity Analysis",
       desc: "Augmented Dickey-Fuller on every numeric column. Column-aware fixes — log returns for price, pct change for volume.",
-      badge: "STATISTICAL TEST",
+      badge: "Statistical Test",
       badgeClass: "badge-warning",
     },
     {
-      tag: "REGIME ENGINE",
+      tag: "Regime Engine",
       title: "Market Regime Detection",
-      desc: "Rolling window mean and volatility shift analysis. Flags COVID-style breaks, structural changes, and volatility clustering.",
-      badge: "ML IMPACT: HIGH",
+      desc: "Rolling window mean and volatility shift analysis. Flags structural changes, COVID-style breaks, and volatility clustering.",
+      badge: "ML Impact: High",
       badgeClass: "badge-warning",
     },
     {
-      tag: "ISOLATION FOREST",
+      tag: "Isolation Forest",
       title: "Anomaly Detection",
       desc: "Sklearn Isolation Forest flags statistically anomalous rows. Tiered severity with winsorization recommendations.",
-      badge: "ML POWERED",
+      badge: "ML Powered",
       badgeClass: "badge-info",
     },
     {
-      tag: "SCORING ENGINE",
+      tag: "Scoring Engine",
       title: "ML Readiness Score",
       desc: "Composite 0–100 score with weighted penalties across all dimensions. Deterministic — same dataset, same score.",
-      badge: "DETERMINISTIC",
+      badge: "Deterministic",
       badgeClass: "badge-info",
     },
     {
-      tag: "RULE ENGINE",
+      tag: "Rule Engine",
       title: "Expert Explanations",
       desc: "Zero AI calls. Pure rule-based engine produces finding, fix, and impact for every issue — specific to your column names.",
-      badge: "NO API COST",
-      badgeClass: "badge-info",
+      badge: "No API Cost",
+      badgeClass: "badge-good",
     },
   ];
 
@@ -58,19 +58,23 @@ export default function Landing({ onLaunch, onAnalyze }) {
       {/* Nav */}
       <nav className="landing-nav">
         <div className="logo">
-          <span className="logo-dot" />
+          <div className="logo-mark">
+            <svg viewBox="0 0 12 12"><rect x="1" y="4" width="2" height="7"/><rect x="5" y="2" width="2" height="9"/><rect x="9" y="0" width="2" height="11"/></svg>
+          </div>
           DataLens Financial
         </div>
-        
+        <span className="nav-tag">Financial ML Dataset Intelligence</span>
       </nav>
 
       {/* Hero */}
       <section className="hero">
-        <div className="hero-grid" />
-        <div className="hero-tag">Financial ML Dataset Intelligence</div>
-        <h1>Your dataset is<br /><span className="gradient-text">lying to you.</span></h1>
+        <div className="hero-eyebrow">Dataset Audit Tool</div>
+        <h1>
+          Your dataset is<br />
+          <em>lying to you.</em>
+        </h1>
         <p className="hero-sub">
-          Look-ahead bias. Regime shifts. Non-stationary columns.<br />
+          Look-ahead bias. Regime shifts. Non-stationary columns.
           DataLens finds what breaks your model before you train it.
         </p>
         <div className="cta-group">
@@ -89,7 +93,7 @@ export default function Landing({ onLaunch, onAnalyze }) {
         {[
           ["6", "Analysis Modules"],
           ["0ms", "AI Latency"],
-          ["100%", "Rule-Based Engine"],
+          ["100%", "Rule-Based"],
           ["∞", "No API Costs"],
         ].map(([num, label]) => (
           <div className="stat-item" key={label}>
@@ -103,10 +107,7 @@ export default function Landing({ onLaunch, onAnalyze }) {
       <div className="features-grid">
         {features.map((f) => (
           <div className="feat-card" key={f.title}>
-            <div className="feat-tag">
-              <span className="feat-dot" />
-              {f.tag}
-            </div>
+            <div className="feat-tag">{f.tag}</div>
             <div className="feat-title">{f.title}</div>
             <div className="feat-desc">{f.desc}</div>
             <span className={`badge ${f.badgeClass}`}>{f.badge}</span>
@@ -116,7 +117,7 @@ export default function Landing({ onLaunch, onAnalyze }) {
 
       {/* Bottom CTA */}
       <div className="bottom-cta">
-        <h2>Ready to audit your<br /><span className="gradient-text">financial dataset?</span></h2>
+        <h2>Ready to audit your<br /><em>financial dataset?</em></h2>
         <p>Upload a CSV. Get a full ML readiness report in seconds.</p>
         <button className="btn-primary" onClick={() => fileRef.current.click()}>
           Open Analyzer →

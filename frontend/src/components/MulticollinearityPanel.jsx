@@ -1,8 +1,6 @@
 export default function MulticollinearityPanel({ data }) {
   if (data.status === "skipped") {
-    return (
-      <div className="regime-clean">ℹ {data.reason}</div>
-    );
+    return <div className="regime-clean">ℹ {data.reason}</div>;
   }
 
   const cols = data.columns || [];
@@ -15,7 +13,7 @@ export default function MulticollinearityPanel({ data }) {
         <div className="finding-header">
           <span className="finding-cat">Correlation Summary</span>
           <span className={`badge ${data.high_corr_pairs.length > 0 ? "badge-warning" : "badge-info"}`}>
-            {data.high_corr_pairs.length} PAIRS FLAGGED
+            {data.high_corr_pairs.length} pairs flagged
           </span>
         </div>
         <p className="finding-text">{data.summary}</p>
@@ -29,21 +27,21 @@ export default function MulticollinearityPanel({ data }) {
             {data.high_corr_pairs.map((pair, i) => (
               <div key={i} className={`finding-card ${pair.severity === "critical" ? "finding-critical" : "finding-warning"}`}>
                 <div className="finding-header">
-                  <span className="finding-cat">
-                    <code style={{ color: "var(--accent)", background: "rgba(0,229,255,0.08)", padding: "1px 6px", borderRadius: "2px", fontSize: "0.7rem" }}>
+                  <span className="finding-cat" style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+                    <code style={{ color: "var(--accent)", background: "rgba(44,95,138,0.07)", padding: "1px 6px", borderRadius: "3px", fontFamily: "'DM Mono', monospace", fontSize: "0.7rem" }}>
                       {pair.col_a}
                     </code>
-                    {" ↔ "}
-                    <code style={{ color: "var(--accent)", background: "rgba(0,229,255,0.08)", padding: "1px 6px", borderRadius: "2px", fontSize: "0.7rem" }}>
+                    ↔
+                    <code style={{ color: "var(--accent)", background: "rgba(44,95,138,0.07)", padding: "1px 6px", borderRadius: "3px", fontFamily: "'DM Mono', monospace", fontSize: "0.7rem" }}>
                       {pair.col_b}
                     </code>
                   </span>
                   <span className={`badge ${pair.severity === "critical" ? "badge-critical" : "badge-warning"}`}>
-                    {(pair.correlation * 100).toFixed(1)}% CORR
+                    {(pair.correlation * 100).toFixed(1)}% corr
                   </span>
                 </div>
                 <div className="finding-fix">
-                  <span className="fix-label">FIX</span>
+                  <span className="fix-label">Fix</span>
                   {pair.fix}
                 </div>
               </div>
@@ -53,7 +51,7 @@ export default function MulticollinearityPanel({ data }) {
       )}
 
       {/* VIF table */}
-      {data.vif_scores.length > 0 && (
+      {data.vif_scores?.length > 0 && (
         <div>
           <div className="sidebar-heading" style={{ marginBottom: "0.5rem" }}>Variance Inflation Factor (VIF)</div>
           <div className="table-wrap">
@@ -69,15 +67,12 @@ export default function MulticollinearityPanel({ data }) {
                 {data.vif_scores.map((row) => (
                   <tr key={row.column}>
                     <td className="col-name">{row.column}</td>
-                    <td style={{ fontFamily: "'Space Mono', monospace" }}>{row.vif}</td>
+                    <td style={{ fontFamily: "'DM Mono', monospace", fontSize: "0.75rem" }}>{row.vif}</td>
                     <td>
                       <span className={`pill ${
-                        row.severity === "critical" ? "pill-bad"
-                        : row.severity === "warning" ? "pill-warn"
-                        : "pill-good"
-                      }`}>
-                        {row.verdict}
-                      </span>
+                        row.severity === "critical" ? "pill-bad" :
+                        row.severity === "warning"  ? "pill-warn" : "pill-good"
+                      }`}>{row.verdict}</span>
                     </td>
                   </tr>
                 ))}
@@ -87,18 +82,18 @@ export default function MulticollinearityPanel({ data }) {
         </div>
       )}
 
-      {/* Correlation heatmap — simple grid */}
+      {/* Correlation heatmap */}
       {cols.length > 0 && cols.length <= 8 && (
         <div>
           <div className="sidebar-heading" style={{ marginBottom: "0.5rem" }}>Correlation Heatmap</div>
           <div style={{ overflowX: "auto" }}>
-            <table style={{ borderCollapse: "collapse", fontFamily: "'Space Mono', monospace", fontSize: "0.6rem" }}>
+            <table style={{ borderCollapse: "collapse", fontFamily: "'DM Mono', monospace", fontSize: "0.62rem" }}>
               <thead>
                 <tr>
-                  <th style={{ padding: "6px 10px", color: "var(--muted)", fontWeight: 400 }}></th>
+                  <th style={{ padding: "6px 10px", color: "var(--muted2)", fontWeight: 400 }}></th>
                   {cols.map(c => (
-                    <th key={c} style={{ padding: "6px 8px", color: "var(--muted)", fontWeight: 400, maxWidth: "60px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-                      {c.length > 6 ? c.slice(0, 6) + "…" : c}
+                    <th key={c} style={{ padding: "6px 8px", color: "var(--muted2)", fontWeight: 400, maxWidth: "60px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                      {c.length > 7 ? c.slice(0, 7) + "…" : c}
                     </th>
                   ))}
                 </tr>
@@ -106,26 +101,23 @@ export default function MulticollinearityPanel({ data }) {
               <tbody>
                 {cols.map(rowCol => (
                   <tr key={rowCol}>
-                    <td style={{ padding: "6px 10px", color: "var(--muted)", whiteSpace: "nowrap" }}>
-                      {rowCol.length > 8 ? rowCol.slice(0, 8) + "…" : rowCol}
+                    <td style={{ padding: "6px 10px", color: "var(--muted)", whiteSpace: "nowrap", fontFamily: "'DM Mono', monospace" }}>
+                      {rowCol.length > 9 ? rowCol.slice(0, 9) + "…" : rowCol}
                     </td>
                     {cols.map(colCol => {
                       const val = data.corr_matrix?.[rowCol]?.[colCol] ?? 0;
                       const abs = Math.abs(val);
-                      // Color scale: dark = high correlation
-                      const alpha = rowCol === colCol ? 0.15 : abs * 0.8;
+                      const alpha = rowCol === colCol ? 0.1 : abs * 0.6;
                       const bg = val >= 0
-                        ? `rgba(0,229,255,${alpha})`
-                        : `rgba(255,107,53,${alpha})`;
-                      const textColor = abs > 0.6 ? "var(--text)" : "var(--muted2)";
+                        ? `rgba(44,95,138,${alpha})`
+                        : `rgba(192,57,43,${alpha})`;
                       return (
                         <td key={colCol} style={{
                           padding: "6px 8px",
                           background: bg,
-                          color: textColor,
+                          color: abs > 0.6 ? "var(--text)" : "var(--muted2)",
                           textAlign: "center",
                           border: "1px solid var(--border)",
-                          transition: "background 0.2s",
                         }}>
                           {val.toFixed(2)}
                         </td>

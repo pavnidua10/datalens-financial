@@ -5,7 +5,7 @@ export default function StationarityTable({ data }) {
         <thead>
           <tr>
             <th>Column</th>
-            <th>ADF Stat</th>
+            <th>ADF Statistic</th>
             <th>p-value</th>
             <th>Result</th>
           </tr>
@@ -14,8 +14,8 @@ export default function StationarityTable({ data }) {
           {Object.entries(data).map(([col, info]) => (
             <tr key={col}>
               <td className="col-name">{col}</td>
-              <td>{info.adf_statistic}</td>
-              <td>{info.p_value}</td>
+              <td style={{ fontFamily: "'DM Mono', monospace", fontSize: "0.75rem" }}>{info.adf_statistic}</td>
+              <td style={{ fontFamily: "'DM Mono', monospace", fontSize: "0.75rem" }}>{info.p_value}</td>
               <td>
                 <span className={`pill ${info.is_stationary ? "pill-good" : "pill-bad"}`}>
                   {info.is_stationary ? "Stationary ✓" : "Non-stationary ✗"}
